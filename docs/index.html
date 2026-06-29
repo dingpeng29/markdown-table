@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="免费在线Markdown表格生成器，可视化编辑表格，自动生成Markdown表格语法。支持列对齐、行列增删。写文档、README必备工具。">
+<meta name="keywords" content="Markdown表格,Markdown Table,表格生成器,Markdown编辑器,文档工具,README表格">
+<meta property="og:title" content="Markdown表格在线生成器 - Markdown Table Generator | ToolBox Pro">
+<meta property="og:description" content="可视化创建编辑Markdown表格，自动生成格式化表格语法，一键复制。">
+<meta property="og:url" content="https://dingpeng29.github.io/markdown-table/">
+<title>Markdown表格生成器 - Markdown Table Generator | ToolBox Pro</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Markdown表格生成器","url":"https://dingpeng29.github.io/markdown-table/","description":"在线可视化生成Markdown表格，支持单元格编辑和列对齐","applicationCategory":"Utility","operatingSystem":"All","inLanguage":"zh-CN"}
+</script>
+<style>
+:root{--bg:#f8fafc;--card:#fff;--text:#1e293b;--text2:#64748b;--border:#e2e8f0;--primary:#3b82f6;--primary-h:#2563eb;--green:#10b981;--red:#ef4444;--shadow:0 1px 3px rgba(0,0,0,0.06);--radius:12px;--radius-sm:8px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;}
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;}
+.header .logo{font-size:20px;font-weight:700;text-decoration:none;color:var(--text);display:flex;align-items:center;gap:8px;}
+.header .back{color:var(--text2);text-decoration:none;font-size:14px;}.header .back:hover{color:var(--primary);}
+.container{max-width:1000px;margin:0 auto;padding:24px 20px;}
+.hero{text-align:center;padding:32px 20px 24px;}
+.hero h1{font-size:28px;font-weight:800;color:var(--text);}
+.hero p{color:var(--text2);font-size:14px;margin-top:8px;}
+.card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:20px;}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;}
+.toolbar .sep{width:1px;height:24px;background:var(--border);margin:0 4px;}
+.btn{padding:8px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;display:inline-flex;align-items:center;gap:4px;}
+.btn-primary{background:var(--primary);color:#fff;}.btn-primary:hover{background:var(--primary-h);}
+.btn-green{background:var(--green);color:#fff;}.btn-green:hover{background:#059669;}
+.btn-red{background:var(--red);color:#fff;}.btn-red:hover{background:#dc2626;}
+.btn-secondary{background:var(--bg);color:var(--text);border:1px solid var(--border);}.btn-secondary:hover{background:var(--border);}
+.table-scroll{overflow-x:auto;margin-top:8px;}
+.edit-table{border-collapse:collapse;width:100%;min-width:400px;}
+.edit-table th,.edit-table td{border:1px solid var(--border);padding:6px 8px;text-align:left;min-width:80px;}
+.edit-table th{background:var(--bg);font-size:13px;}
+.edit-table td input{width:100%;border:none;outline:none;font-size:13px;background:transparent;padding:4px;font-family:inherit;}
+.edit-table td input:focus{background:#dbeafe;}
+.edit-table .align-select{font-size:11px;padding:2px 4px;border:1px solid var(--border);border-radius:4px;text-align:center;cursor:pointer;}
+.preview-box{margin-top:16px;padding:16px;background:#1e293b;border-radius:var(--radius-sm);font-family:'SF Mono','Fira Code','Consolas',monospace;font-size:13px;line-height:1.6;color:#e2e8f0;overflow-x:auto;white-space:pre;position:relative;max-height:300px;overflow-y:auto;min-height:60px;}
+.preview-box .copy-btn{position:sticky;top:0;float:right;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;z-index:10;}.preview-box .copy-btn:hover{background:rgba(255,255,255,0.25);}
+.rendered-table{margin-top:16px;overflow-x:auto;}
+.rendered-table table{border-collapse:collapse;width:100%;}
+.rendered-table th,.rendered-table td{border:1px solid var(--border);padding:8px 12px;text-align:left;font-size:14px;}
+.rendered-table th{background:var(--bg);font-weight:600;}
+.footer{text-align:center;padding:32px 20px;color:var(--text2);font-size:12px;border-top:1px solid var(--border);margin-top:32px;}.footer a{color:var(--primary);text-decoration:none;}
+.powered{text-align:center;font-size:13px;color:var(--text2);margin-top:24px;}.powered a{color:var(--primary);text-decoration:none;font-weight:600;}
+.toast{position:fixed;top:20px;right:20px;padding:10px 18px;border-radius:var(--radius-sm);color:#fff;font-size:13px;z-index:9999;animation:slideIn .3s;background:var(--green);}
+@keyframes slideIn{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:translateX(0);}}
+@media(max-width:640px){.hero h1{font-size:22px;}}
+</style>
+</head>
+<body>
+<header class="header"><a href="/markdown-table/" class="logo">📊 Markdown Table</a><a href="/toolbox-pro/" class="back">← ToolBox Pro</a></header>
+<div class="container">
+<div class="hero"><h1>Markdown 表格在线生成器</h1><p>可视化编辑表格，自动生成Markdown表格语法。支持列对齐、增减行列。写文档、写README的必备工具。</p></div>
+
+<div class="card">
+<div class="toolbar">
+<button class="btn btn-primary" onclick="addRow()">+ 行</button>
+<button class="btn btn-primary" onclick="addCol()">+ 列</button>
+<button class="btn btn-red" onclick="delRow()">- 行</button>
+<button class="btn btn-red" onclick="delCol()">- 列</button>
+<span class="sep"></span>
+<button class="btn btn-secondary" onclick="resetTable()">重置</button>
+</div>
+
+<div class="table-scroll">
+<table class="edit-table" id="editTable">
+<thead><tr><th>列标题</th><th>列标题</th><th>列标题</th></tr></thead>
+<tbody>
+<tr><td><input value="" placeholder="内容..."></td><td><input value="" placeholder="内容..."></td><td><input value="" placeholder="内容..."></td></tr>
+<tr><td><input value="" placeholder="内容..."></td><td><input value="" placeholder="内容..."></td><td><input value="" placeholder="内容..."></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="card">
+<h3 style="font-size:16px;margin-bottom:12px;">📝 Markdown 代码</h3>
+<div class="preview-box" id="mdCode"><button class="copy-btn" onclick="copyMd()">复制</button></div>
+</div>
+
+<div class="card">
+<h3 style="font-size:16px;margin-bottom:12px;">👁 渲染预览</h3>
+<div class="rendered-table" id="preview"></div>
+</div>
+
+<div class="powered">由 <a href="/toolbox-pro/">ToolBox Pro</a> 提供支持 — 更多免费开发工具</div>
+</div>
+<footer class="footer"><p>Markdown Table Generator — 所有处理在浏览器本地完成 · <a href="https://github.com/dingpeng29/markdown-table" target="_blank">GitHub</a></p></footer>
+<script>
+var alignments=['left','left','left'];
+
+function getData(){
+var rows=[];
+var ths=document.querySelectorAll('#editTable thead th');
+var header=[];
+ths.forEach(function(th){header.push(th.textContent.trim()||' ');});
+rows.push(header);
+
+var trs=document.querySelectorAll('#editTable tbody tr');
+trs.forEach(function(tr){
+var row=[];
+tr.querySelectorAll('td input').forEach(function(inp){row.push(inp.value);});
+rows.push(row);
+});
+return rows;
+}
+
+function genMarkdown(){
+var data=getData();
+if(data.length===0)return'';
+var cols=data[0].length;
+while(alignments.length<cols)alignments.push('left');
+
+var lines=[];
+lines.push('| '+data[0].join(' | ')+' |');
+
+var sep='|';
+for(var i=0;i<cols;i++){
+var a=alignments[i]||'left';
+if(a==='left')sep+=' :--- |';
+else if(a==='center')sep+=' :---: |';
+else sep+=' ---: |';
+}
+lines.push(sep);
+
+for(var r=1;r<data.length;r++){
+lines.push('| '+data[r].map(function(c){return c||' ';}).join(' | ')+' |');
+}
+return lines.join('\n');
+}
+
+function renderPreview(){
+var md=genMarkdown();
+document.getElementById('mdCode').innerHTML='<button class="copy-btn" onclick="copyMd()">复制</button>'+escHtml(md);
+
+var data=getData();
+if(data.length===0){document.getElementById('preview').innerHTML='';return;}
+var h='<table><thead><tr>';
+data[0].forEach(function(c){h+='<th>'+escHtml(c)+'</th>';});
+h+='</tr></thead><tbody>';
+for(var r=1;r<data.length;r++){
+h+='<tr>';
+data[r].forEach(function(c){h+='<td>'+escHtml(c||'')+'</td>';});
+h+='</tr>';
+}
+h+='</tbody></table>';
+document.getElementById('preview').innerHTML=h;
+}
+
+function addRow(){
+var tbody=document.querySelector('#editTable tbody');
+var tr=document.createElement('tr');
+var cols=document.querySelectorAll('#editTable thead th').length;
+for(var i=0;i<cols;i++){var td=document.createElement('td');td.innerHTML='<input value="" placeholder="内容...">';tr.appendChild(td);}
+tbody.appendChild(tr);
+bindInputs();
+renderPreview();
+}
+
+function addCol(){
+var i=document.querySelectorAll('#editTable thead th').length;
+var th=document.createElement('th');th.textContent='列标题';th.contentEditable='true';
+document.querySelector('#editTable thead tr').appendChild(th);
+document.querySelectorAll('#editTable tbody tr').forEach(function(tr){
+var td=document.createElement('td');td.innerHTML='<input value="" placeholder="内容...">';tr.appendChild(td);
+});
+alignments.push('left');
+bindInputs();
+renderPreview();
+}
+
+function delRow(){
+var tbody=document.querySelector('#editTable tbody');
+if(tbody.rows.length>1)tbody.deleteRow(tbody.rows.length-1);
+renderPreview();
+}
+
+function delCol(){
+var ths=document.querySelectorAll('#editTable thead th');
+if(ths.length<=1)return;
+var idx=ths.length-1;
+ths[idx].remove();
+document.querySelectorAll('#editTable tbody tr').forEach(function(tr){if(tr.cells[idx])tr.cells[idx].remove();});
+alignments.pop();
+renderPreview();
+}
+
+function resetTable(){
+var thead=document.querySelector('#editTable thead tr');
+thead.innerHTML='<th>列标题</th><th>列标题</th><th>列标题</th>';
+var tbody=document.querySelector('#editTable tbody');
+tbody.innerHTML='<tr><td><input value="" placeholder="内容..."></td><td><input value="" placeholder="内容..."></td><td><input value="" placeholder="内容..."></td></tr><tr><td><input value="" placeholder="内容..."></td><td><input value="" placeholder="内容..."></td><td><input value="" placeholder="内容..."></td></tr>';
+alignments=['left','left','left'];
+bindInputs();
+renderPreview();
+}
+
+function bindInputs(){
+document.querySelectorAll('#editTable thead th').forEach(function(th){th.addEventListener('input',renderPreview);});
+document.querySelectorAll('#editTable td input').forEach(function(inp){inp.addEventListener('input',renderPreview);});
+}
+
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function copyMd(){
+var code=document.getElementById('mdCode').textContent;
+navigator.clipboard.writeText(code).then(function(){
+var t=document.createElement('div');t.className='toast';t.textContent='Markdown表格已复制';document.body.appendChild(t);setTimeout(function(){t.remove();},1800);
+});
+}
+
+function makeHeadersEditable(){
+document.querySelectorAll('#editTable thead th').forEach(function(th,i){
+th.contentEditable='true';
+th.addEventListener('blur',function(){renderPreview();});
+});
+}
+
+makeHeadersEditable();
+bindInputs();
+renderPreview();
+</script>
+</body>
+</html>
